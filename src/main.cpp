@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <raylib.h>
 #include <deque>
@@ -41,10 +40,8 @@ public:
 	bool addSegment = false;
 	deque<Vector2> body = {{6, 9}, {5, 9}, {4, 9}};
 	Vector2 direction = {1, 0};
-
 	void Draw()
 	{
-
 		for (unsigned int i = 0; i < body.size(); i++)
 		{
 			float x = body[i].x;
@@ -86,32 +83,25 @@ public:
 			Image img2 = LoadImage("graphics/food2.png");
 			Image img3 = LoadImage("graphics/food3.png");
 			Image img4 = LoadImage("graphics/food4.png");
-
 			textures[0] = LoadTextureFromImage(img1);
 			textures[1] = LoadTextureFromImage(img2);
 			textures[2] = LoadTextureFromImage(img3);
 			textures[3] = LoadTextureFromImage(img4);
-
 			UnloadImage(img1);
 			UnloadImage(img2);
 			UnloadImage(img3);
 			UnloadImage(img4);
-
 			loaded = true;
 		}
-
 		textureIndex = GetRandomValue(0, 3);
-
 		position = GenerateRandomPos(snakeBody);
 	}
-
 	Vector2 GenerateRandomCell()
 	{
 		float x = GetRandomValue(0, cellcount - 1);
 		float y = GetRandomValue(0, cellcount - 1);
 		return Vector2{x, y};
 	}
-
 	Vector2 GenerateRandomPos(deque<Vector2> snakeBody)
 	{
 		Vector2 newPos = GenerateRandomCell();
@@ -121,7 +111,6 @@ public:
 		}
 		return newPos;
 	}
-
 	void Draw()
 	{
 		DrawTexture(
@@ -131,7 +120,6 @@ public:
 			WHITE);
 	}
 };
-
 Texture2D Food::textures[4] = {0};
 bool Food::loaded = false;
 class Game
@@ -170,7 +158,6 @@ public:
 		for (auto &f : fruits)
 			f.Draw();
 	}
-
 	void CheckCollisionWithFood()
 	{
 		for (auto &f : fruits)
@@ -178,16 +165,15 @@ public:
 			if (Vector2Equals(snake.body[0], f.position))
 			{
 				f.position = f.GenerateRandomPos(snake.body);
-				f.textureIndex = GetRandomValue(0, 3); // respawn only this fruit
+				f.textureIndex = GetRandomValue(0, 3);
 				snake.addSegment = true;
 				score++;
-
-				speed *= 0.98; // 2% faster per point
+				if(speed>=0.07)
+					speed *= 0.98;
 				PlaySound(eat);
 			}
 		}
 	}
-
 	void CheckCollisionWithEdges()
 	{
 		if (snake.body[0].x == cellcount || snake.body[0].x == -1)
@@ -221,7 +207,6 @@ public:
 			CheckCollisionsWithTail();
 		}
 	}
-
 	void GameOver()
 	{
 		game_over = true;
@@ -244,9 +229,7 @@ public:
 };
 int main()
 {
-
 	InitWindow(2 * offset + cellsize * cellcount, 2 * offset + cellsize * cellcount, "Snake's world");
-
 	SetTargetFPS(60);
 	{
 		Button startButton{"graphics/start_button.png", {350, 300}, 0.65};
@@ -254,7 +237,6 @@ int main()
 		Button restartButton{"graphics/restart.png", {350, 500}, 1.5};
 		bool exit = false;
 		Game game = Game();
-
 		while (!WindowShouldClose() && exit == false)
 		{
 			BeginDrawing();
@@ -270,7 +252,6 @@ int main()
 				DrawText("Game Over!", 220, 150, 90, darkGreen);
 				Vector2 mousePosition = GetMousePosition();
 				bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-
 				DrawText(TextFormat("Score: %i", temp_score), 350, 300, 60, darkGreen);
 				DrawText(TextFormat("High Score: %i", high_score), 280, 400, 60, darkGreen);
 				restartButton.Draw();
@@ -280,7 +261,6 @@ int main()
 					game.running = true;
 				}
 			}
-
 			else if ((!game.running) && (game.game_over == false))
 			{
 				DrawText("Snake's World", 180, 150, 80, darkGreen);
@@ -288,7 +268,6 @@ int main()
 				bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 				startButton.Draw();
 				exitButton.Draw();
-
 				if (exitButton.isPressed(mousePosition, mousePressed))
 				{
 					exit = true;
@@ -309,37 +288,31 @@ int main()
 				{
 					game.Update();
 				}
-
-				if (IsKeyPressed(KEY_UP) && game.snake.direction.y != 1)
+				if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && game.snake.direction.y != 1)
 				{
-
 					game.snake.direction = {0, -1};
 					WaitTime(0.15);
 					game.running = true;
 				}
-				if (IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1)
+				if ((IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) && game.snake.direction.y != -1)
 				{
-
 					game.snake.direction = {0, 1};
 					WaitTime(0.15);
 					game.running = true;
 				}
-				if (IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1)
+				if ((IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) && game.snake.direction.x != 1)
 				{
-
 					game.snake.direction = {-1, 0};
 					WaitTime(0.15);
 					game.running = true;
 				}
-				if (IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1)
+				if ((IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) && game.snake.direction.x != -1)
 				{
-
 					game.snake.direction = {1, 0};
 					WaitTime(0.15);
 					game.running = true;
 				}
 			}
-
 			EndDrawing();
 		}
 	}
