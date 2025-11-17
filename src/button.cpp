@@ -2,7 +2,7 @@
 
 /**
  * Button::Button
- * =============================
+ * ============================
  * Objective:
  *   Load an image from disk, scale it, convert it into a texture, and initialize
  *   the button's on-screen position.
