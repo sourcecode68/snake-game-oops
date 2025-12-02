@@ -525,7 +525,6 @@ public:
         }
         temp_score = score; // copy last score for display on game over screen
         score = 0; // reset current score
-        speed = 0.2; // ensure speed is reset (duplicate but explicit)
     }
 };
 
